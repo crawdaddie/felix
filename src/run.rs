@@ -1620,6 +1620,21 @@ fn _run(mut state: State, session_path: PathBuf) -> Result<(), FxError> {
                                 }
                             }
 
+                            //exit by q
+                            KeyCode::Char('q') => {
+                                delete_cursor();
+                                go_to_and_rest_info();
+                                // print!("Z");
+                                show_cursor();
+                                screen.flush()?;
+
+                                match state.lwd_file.to_owned() {
+                                    Some(path) => std::fs::write(path, state.current_dir.to_str().unwrap())?,
+                                    _ => Err(FxError::MissingEnvVariable("SHELL_PID".to_owned()))?,
+                                }
+
+                                break 'main;
+                            }
                             //exit by ZZ
                             KeyCode::Char('Z') => {
                                 delete_cursor();
